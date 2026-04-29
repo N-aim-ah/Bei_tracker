@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-5">
+
+            <div class="card shadow-lg border-0" style="border-radius: 14px;">
+
+                <div class="card-body p-4">
+
+                    <h3 class="text-center mb-4">🔐 Login</h3>
+
+                    <!-- Django messages (optional but professional) -->
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            ❌ Invalid username or password
+                        </div>
+                    {% endif %}
+
+                    <!-- Django Login Form -->
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            {{ form.username }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            {{ form.password }}
+                        </div>
+
+                        <button class="btn btn-primary w-100">
+                            Login
+                        </button>
+                    </form>
+
+                    <p class="text-center mt-3">
+                        Don't have an account?
+                        <a href="{% url 'register' %}">Create account</a>
+                    </p>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

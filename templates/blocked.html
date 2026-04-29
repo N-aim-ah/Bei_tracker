@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card p-5 text-center">
+
+    <h3 class="text-danger">🚫 Access Denied</h3>
+
+    <p>You need an active subscription to use seller features.</p>
+
+    <a href="{% url 'pay' %}" class="btn btn-success mt-3">
+        💳 Pay KES 500
+    </a>
+
+</div>
+
+{% endblock %}

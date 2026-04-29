@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h3 class="mb-4">💰 Cheapest Prices</h3>
+
+    <div class="row">
+
+        {% for c in cheapest %}
+        <div class="col-md-4 mb-3">
+
+            <div class="card shadow-sm">
+
+                <div class="card-body text-center">
+
+                    <!-- ITEM NAME -->
+                    <h5 class="mb-2">📦 {{ c.item__name }}</h5>
+
+                    <!-- CHEAPEST PRICE -->
+                    <h4 class="text-success">
+                        Ksh {{ c.min_price }}
+                    </h4>
+
+                    <small class="text-muted">
+                        Lowest price found
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

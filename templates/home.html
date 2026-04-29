@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form method="GET" class="mb-3">
+<input type="text" name="q" class="form-control" placeholder="Search...">
+</form>
+
+<div class="row">
+
+{% for p in prices %}
+<div class="col-md-4 mb-3">
+<div class="card p-3">
+
+{% if p.item.image %}
+<img src="{{ p.item.image.url }}" style="height:150px; object-fit:cover;">
+{% endif %}
+
+<h5>{{ p.item.name }}</h5>
+
+<p>
+{{ p.business.name }} ({{ p.business.get_business_type_display }})
+</p>
+
+<p>{{ p.business.location }}</p>
+
+<p class="
+{% for c in cheapest %}
+{% if c.item__name == p.item.name and c.min_price == p.amount %}
+cheap
+{% endif %}
+{% endfor %}
+">
+Ksh {{ p.amount }}
+</p>
+
+</div>
+</div>
+{% endfor %}
+
+</div>
+
+{% endblock %}

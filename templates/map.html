@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .map-wrapper {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 20px;
+    }
+
+    .side-panel {
+        background: white;
+        border-radius: 14px;
+        padding: 15px;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+        height: 550px;
+        overflow-y: auto;
+    }
+
+    .map-box {
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+    }
+
+    .title {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .location-item {
+        padding: 12px;
+        margin-bottom: 10px;
+        border-radius: 10px;
+        background: #f8f9fa;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .location-item:hover {
+        background: #e9ecef;
+        transform: translateX(3px);
+    }
+
+    .shop-name {
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .shop-phone {
+        font-size: 12px;
+        color: gray;
+    }
+
+    @media (max-width: 768px) {
+        .map-wrapper {
+            grid-template-columns: 1fr;
+        }
+
+        .side-panel {
+            height: auto;
+        }
+    }
+</style>
+
+<h3 class="mb-3">📍 Shops & Markets Map</h3>
+
+<div class="map-wrapper">
+
+    <!-- SIDE PANEL (DATABASE SHOPS) -->
+    <div class="side-panel">
+        <div class="title">Available Shops</div>
+
+        {% for shop in shops %}
+        <div class="location-item"
+             onclick="focusShop({{ shop.latitude }}, {{ shop.longitude }})">
+
+            <div class="shop-name">🏪 {{ shop.name }}</div>
+            <div class="shop-phone">📞 {{ shop.phone|default:"No phone" }}</div>
+
+            <small class="text-muted">{{ shop.location_name }}</small>
+        </div>
+        {% empty %}
+            <p>No shops available yet.</p>
+        {% endfor %}
+    </div>
+
+    <!-- MAP -->
+    <div class="map-box">
+        <div id="map" style="height: 550px; width: 100%;"></div>
+    </div>
+
+</div>
+
+<script>
+let map;
+let markers = [];
+
+function initMap() {
+
+    const center = { lat: -4.0435, lng: 39.6682 };
+
+    map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 12,
+        center: center,
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: true
+    });
+
+    const shops = [
+        {% for shop in shops %}
+        {
+            name: "{{ shop.name }}",
+            phone: "{{ shop.phone }}",
+            lat: {{ shop.latitude }},
+            lng: {{ shop.longitude }}
+        },
+        {% endfor %}
+    ];
+
+    shops.forEach(shop => {
+
+        const marker = new google.maps.Marker({
+            position: { lat: shop.lat, lng: shop.lng },
+            map: map,
+            title: shop.name
+        });
+
+        const info = new google.maps.InfoWindow({
+            content: `
+                <div style="font-size:14px;">
+                    <b>${shop.name}</b><br>
+                    📞 ${shop.phone || "No phone"}
+                </div>
+            `
+        });
+
+        marker.addListener("click", () => {
+            info.open(map, marker);
+        });
+
+        markers.push({ marker, shop });
+    });
+}
+
+// 🎯 Click sidebar → focus map
+function focusShop(lat, lng) {
+    map.setZoom(15);
+    map.setCenter({ lat: lat, lng: lng });
+}
+
+window.onload = initMap;
+</script>
+
+<!-- Google Maps API -->
+<script async
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+</script>
+
+{% endblock %}
