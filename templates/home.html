@@ -1,43 +1,142 @@
 {% extends "base.html" %}
-
 {% block content %}
 
-<form method="GET" class="mb-3">
-<input type="text" name="q" class="form-control" placeholder="Search...">
-</form>
+<style>
+.market-bg {
+    background-image: url('https://images.unsplash.com/photo-1607082349566-187342175e2f');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+}
 
-<div class="row">
+.overlay {
+    background: rgba(0,0,0,0.65);
+    min-height: 100vh;
+    padding: 20px;
+}
 
-{% for p in prices %}
-<div class="col-md-4 mb-3">
-<div class="card p-3">
+.glass-card {
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 16px;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.2);
+}
 
-{% if p.item.image %}
-<img src="{{ p.item.image.url }}" style="height:150px; object-fit:cover;">
-{% endif %}
+#map {
+    height: 320px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+}
+</style>
 
-<h5>{{ p.item.name }}</h5>
+<div class="market-bg">
+<div class="overlay">
 
-<p>
-{{ p.business.name }} ({{ p.business.get_business_type_display }})
-</p>
+<div class="container">
 
-<p>{{ p.business.location }}</p>
+    <!-- HEADER -->
+    <div class="mb-3 text-white">
+        <h3> Marketplace</h3>
+        <p class="text-light">Find nearby trusted sellers instantly</p>
+    </div>
 
-<p class="
-{% for c in cheapest %}
-{% if c.item__name == p.item.name and c.min_price == p.amount %}
-cheap
-{% endif %}
-{% endfor %}
-">
-Ksh {{ p.amount }}
-</p>
+    <!-- SEARCH -->
+    <form method="GET" class="mb-3">
+        <input class="form-control" name="q"
+               placeholder="Search products..."
+               value="{{ query|default:'' }}">
+    </form>
+
+    <!-- MAP -->
+    <div id="map"></div>
+
+    <!-- PRODUCTS -->
+    <div class="row">
+
+        {% for price in prices %}
+        <div class="col-md-3 mb-3">
+
+            <div class="glass-card p-3 h-100">
+
+                <h6 class="fw-bold">{{ price.item_name }}</h6>
+                <p class="text-warning fw-bold">KES {{ price.amount }}</p>
+
+                <small> {{ price.shop.name }}</small><br>
+                <small> {{ price.shop.location_name }}</small><br>
+
+                <small>
+                    {% if price.shop.is_online %}
+                         Online
+                    {% else %}
+                         Offline
+                    {% endif %}
+                </small>
+
+                <br><br>
+
+                {% if price.shop.phone %}
+                <a class="btn btn-success btn-sm w-100"
+                   href="https://wa.me/{{ price.shop.phone }}?text=Hello%20I%20am%20interested%20in%20{{ price.item_name|urlencode }}"
+                   target="_blank">
+                    WhatsApp
+                </a>
+                {% endif %}
+
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
 
 </div>
 </div>
-{% endfor %}
 
-</div>
+<!-- GOOGLE MAPS (FIXED VERSION) -->
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+
+<script>
+function initMap() {
+
+    const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 12,
+        center: {lat: -1.286389, lng: 36.817223}
+    });
+
+    const shops = [
+        {% for price in prices %}
+            {% if price.shop.latitude and price.shop.longitude %}
+            {
+                name: "{{ price.shop.name|escapejs }}",
+                lat: {{ price.shop.latitude }},
+                lng: {{ price.shop.longitude }},
+                online: {{ price.shop.is_online|yesno:"true,false" }}
+            },
+            {% endif %}
+        {% endfor %}
+    ];
+
+    shops.forEach(s => {
+
+        new google.maps.Marker({
+            position: {lat: s.lat, lng: s.lng},
+            map: map,
+            title: s.name,
+            icon: s.online
+                ? "https://maps.google.com/mapfiles/ms/icons/green-dot.png"
+                : "https://maps.google.com/mapfiles/ms/icons/red-dot.png"
+        });
+
+    });
+
+}
+
+window.onload = initMap;
+</script>
 
 {% endblock %}

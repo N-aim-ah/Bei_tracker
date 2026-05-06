@@ -5,13 +5,13 @@
 
     <!-- HEADER -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3>🏪 Seller Dashboard</h3>
-        <span class="badge bg-secondary">
+        <h3> Seller Dashboard</h3>
+        <span class="badge bg-dark px-3 py-2">
             {{ request.user.username }}
         </span>
     </div>
 
-    <!-- SHOP INFO CARD -->
+    <!-- SHOP INFO -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
 
@@ -20,7 +20,6 @@
             <p><strong>Shop Name:</strong> {{ shop.name }}</p>
             <p><strong>Location:</strong> {{ shop.location_name }}</p>
 
-            <!-- STATUS -->
             {% if shop.is_active %}
                 <span class="badge bg-success">Active</span>
             {% else %}
@@ -30,23 +29,23 @@
         </div>
     </div>
 
-    <!-- SUBSCRIPTION CARD -->
+    <!-- SUBSCRIPTION -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
 
             <h5 class="card-title mb-3">Subscription Status</h5>
 
             {% if shop.is_paid %}
-                <div class="alert alert-success mb-3">
-                    ✅ Active until {{ shop.subscription_end }}
+                <div class="alert alert-success">
+                     Active until {{ shop.subscription_end }}
                 </div>
             {% else %}
-                <div class="alert alert-danger mb-3">
-                    ❌ Subscription expired
+                <div class="alert alert-danger">
+                     Subscription expired
                 </div>
 
                 <a href="{% url 'pay' %}" class="btn btn-success">
-                    💳 Pay KES 500
+                     Pay KES 500
                 </a>
             {% endif %}
 
@@ -54,24 +53,78 @@
     </div>
 
     <!-- ACTIONS -->
-    <div class="card shadow-sm">
+    <div class="card shadow-sm mb-4">
         <div class="card-body">
 
             <h5 class="card-title mb-3">Actions</h5>
 
             <div class="d-flex gap-2 flex-wrap">
 
-                <!-- ADD PRODUCT -->
                 <a href="{% url 'add_price' %}" class="btn btn-primary">
-                    ➕ Add Product
+                     Add Product
                 </a>
 
-                <!-- DELETE BUSINESS -->
                 <a href="{% url 'delete_shop' %}" class="btn btn-danger">
-                    🗑️ Delete Business
+                     Delete Business
                 </a>
 
             </div>
+
+        </div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <h5 class="card-title mb-3">Your Products</h5>
+
+            {% for price in prices %}
+            <div class="card border-0 shadow-sm mb-3 p-2">
+                <div class="row g-2 align-items-center">
+
+                    <!-- IMAGE -->
+                    <div class="col-4">
+                        {% if price.image %}
+                            <img src="{{ price.image.url }}" 
+                                 style="width:100%; height:120px; object-fit:cover; border-radius:10px;">
+                        {% else %}
+                            <div class="bg-light d-flex align-items-center justify-content-center"
+                                 style="height:120px; border-radius:10px;">
+                                <small>No Image</small>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- DETAILS -->
+                    <div class="col-8">
+                        <h6 class="mb-1">{{ price.item_name }}</h6>
+                        <p class="text-success fw-bold mb-1">
+                            KES {{ price.amount }}
+                        </p>
+
+                        <!--  EDIT + DELETE BUTTONS (ADDED HERE) -->
+                        <div class="mt-2 d-flex gap-2">
+
+                            <a href="{% url 'edit_price' price.id %}" 
+                               class="btn btn-sm btn-warning">
+                                 Edit
+                            </a>
+
+                            <a href="{% url 'delete_price' price.id %}" 
+                               class="btn btn-sm btn-danger">
+                                 Delete
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            {% empty %}
+                <p class="text-muted">No products added yet.</p>
+            {% endfor %}
 
         </div>
     </div>

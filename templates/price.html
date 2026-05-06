@@ -10,10 +10,10 @@
             <div class="card shadow-lg border-0" style="border-radius: 14px;">
                 <div class="card-body p-4">
 
-                    <h3 class="mb-3">💰 Add Product Price</h3>
+                    <h3 class="mb-3"> Add Product Price</h3>
 
                     <p class="text-muted">
-                        Add prices for your shop / kiosk / factory products.
+                        Add your product prices manually. No selection needed.
                     </p>
 
                     {% if error %}
@@ -25,20 +25,16 @@
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
 
-                        <!-- ITEM SELECT (FIXED) -->
+                        <!-- ITEM NAME (NEW SYSTEM) -->
                         <div class="mb-3">
-                            <label class="form-label">Select Item</label>
-                            <select name="item" class="form-control" required>
-                                <option value="">-- Choose Item --</option>
-                                {% for item in items %}
-                                    <option value="{{ item.id }}">{{ item.name }}</option>
-                                {% endfor %}
-                            </select>
+                            <label class="form-label">Item Name</label>
+                            <input type="text" name="item_name" class="form-control"
+                                   placeholder="Type your item e.g Rice, Milk" required>
                         </div>
 
                         <!-- PRICE -->
                         <div class="mb-3">
-                            <label class="form-label">Price (Ksh)</label>
+                            <label class="form-label">Amount (Ksh)</label>
                             <input type="number" name="amount" class="form-control"
                                    placeholder="e.g. 120" required>
                         </div>
@@ -49,15 +45,15 @@
                             <input type="file" name="image" class="form-control">
                         </div>
 
-                        <!-- LOCATION INFO DISPLAY -->
+                        <!-- INFO BOX -->
                         <div class="alert alert-info">
-                            📍 Your shop location will be used automatically from your profile.<br>
-                            🏪 Business type: Shop / Kiosk / Factory / Wholesaler
+                             Your shop location is automatically linked.<br>
+                             You are adding products to your personal shop account only.
                         </div>
 
-                        <!-- BUTTON -->
+                        <!-- SUBMIT BUTTON -->
                         <button type="submit" class="btn btn-primary w-100">
-                            💾 Save Price
+                             Save Price
                         </button>
 
                     </form>

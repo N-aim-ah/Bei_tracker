@@ -65,7 +65,7 @@
     }
 </style>
 
-<h3 class="mb-3">📍 Shops & Markets Map</h3>
+<h3 class="mb-3"> Shops & Markets Map</h3>
 
 <div class="map-wrapper">
 
@@ -77,8 +77,8 @@
         <div class="location-item"
              onclick="focusShop({{ shop.latitude }}, {{ shop.longitude }})">
 
-            <div class="shop-name">🏪 {{ shop.name }}</div>
-            <div class="shop-phone">📞 {{ shop.phone|default:"No phone" }}</div>
+            <div class="shop-name"> {{ shop.name }}</div>
+            <div class="shop-phone"> {{ shop.phone|default:"No phone" }}</div>
 
             <small class="text-muted">{{ shop.location_name }}</small>
         </div>
@@ -133,7 +133,7 @@ function initMap() {
             content: `
                 <div style="font-size:14px;">
                     <b>${shop.name}</b><br>
-                    📞 ${shop.phone || "No phone"}
+                     ${shop.phone || "No phone"}
                 </div>
             `
         });
@@ -146,7 +146,7 @@ function initMap() {
     });
 }
 
-// 🎯 Click sidebar → focus map
+//  Click sidebar → focus map
 function focusShop(lat, lng) {
     map.setZoom(15);
     map.setCenter({ lat: lat, lng: lng });

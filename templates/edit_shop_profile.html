@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow p-4">
+
+        <h4>🏪 Edit Your Shop Profile</h4>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button class="btn btn-success">
+                💾 Save Changes
+            </button>
+
+        </form>
+
+        {% if shop.business_image %}
+            <hr>
+            <p>Current Image:</p>
+            <img src="{{ shop.business_image.url }}" width="200">
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

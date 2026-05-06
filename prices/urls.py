@@ -3,33 +3,36 @@ from . import views
 
 urlpatterns = [
 
-    # ==============================
-    # PUBLIC ROUTES
-    # ==============================
+    # HOME (MARKETPLACE)
     path('', views.home, name='home'),
+
+    # MAP PAGE
     path('map/', views.map_view, name='map'),
 
-    # ==============================
-    # AUTHENTICATION
-    # ==============================
+    # AUTH
     path('register/', views.register_view, name='register'),
-    path('login/', views.CustomLoginView.as_view(), name='login'),
-    path('logout/', views.logout_view, name='logout'),
 
-    # ==============================
-    # USER DASHBOARD / FEATURES
-    # ==============================
+    # SHOP SETUP / UPDATE PROFILE
+    path('shop/', views.register_shop, name='register_shop'),
+
+    # DASHBOARD
     path('dashboard/', views.dashboard, name='dashboard'),
-    path('add/', views.add_price, name='add_price'),
+
+    # PRODUCTS (PRICES)
+    path('add-price/', views.add_price, name='add_price'),
+
+    path('edit/<int:price_id>/', views.edit_price, name='edit_price'),
+    path('delete/<int:price_id>/', views.delete_price, name='delete_price'),
+
+    # CHAT SYSTEM
+    path('chat/<int:shop_id>/', views.chat, name='chat'),
+
+    # PAYMENT SYSTEM
     path('pay/', views.pay_subscription, name='pay'),
 
-    # ==============================
-    # BUSINESS MANAGEMENT
-    # ==============================
+    # DELETE SHOP
     path('delete-shop/', views.delete_shop, name='delete_shop'),
 
-    # ==============================
-    # CHAT SYSTEM
-    # ==============================
-    path('chat/<int:shop_id>/', views.chat, name='chat'),
+    # ONLINE STATUS (REAL-TIME AJAX)
+    path('set-online/', views.set_online, name='set_online'),
 ]
